@@ -18,7 +18,7 @@ export default async function DocumentPage({
 
   if (!user) redirect("/auth/login")
 
-  const { data: document } = await supabase.from("documents").select("*").single()
+  const { data: document } = await supabase.from("documents").select("*").eq("id", documentId).single()
 
   if (!document) redirect("/dashboard")
 
