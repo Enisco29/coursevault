@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Settings, Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Settings, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,62 +27,75 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
-const COLORS = ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"]
+const COLORS = [
+  "#3b82f6",
+  "#ef4444",
+  "#10b981",
+  "#f59e0b",
+  "#8b5cf6",
+  "#ec4899",
+];
 
 interface Course {
-  id: string
-  title: string
-  description: string | null
-  color: string
+  id: string;
+  title: string;
+  description: string | null;
+  color: string;
 }
 
 export default function CourseSettings({ course }: { course: Course }) {
-  const [open, setOpen] = useState(false)
-  const [title, setTitle] = useState(course.title)
-  const [description, setDescription] = useState(course.description || "")
-  const [color, setColor] = useState(course.color)
-  const [isLoading, setIsLoading] = useState(false)
-  const supabase = createClient()
-  const router = useRouter()
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState(course.title);
+  const [description, setDescription] = useState(course.description || "");
+  const [color, setColor] = useState(course.color);
+  const [isLoading, setIsLoading] = useState(false);
+  const supabase = createClient();
+  const router = useRouter();
 
   const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
-      const { error } = await supabase.from("courses").update({ title, description, color }).eq("id", course.id)
+      const { error } = await supabase
+        .from("courses")
+        .update({ title, description, color })
+        .eq("id", course.id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      setOpen(false)
-      router.refresh()
+      setOpen(false);
+      router.refresh();
     } catch (error) {
-      console.error("Error updating course:", error)
+      console.error("Error updating course:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
     try {
-      const { error } = await supabase.from("courses").delete().eq("id", course.id)
+      const { error } = await supabase
+        .from("courses")
+        .delete()
+        .eq("id", course.id);
 
-      if (error) throw error
+      if (error) throw error;
 
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Error deleting course:", error)
+      console.error("Error deleting course:", error);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2 bg-transparent">
           <Settings className="w-4 h-4" />
-          Settings
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -93,7 +106,13 @@ export default function CourseSettings({ course }: { course: Course }) {
         <form onSubmit={handleUpdate} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Course Title</Label>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} disabled={isLoading} required />
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              disabled={isLoading}
+              required
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
@@ -136,15 +155,15 @@ export default function CourseSettings({ course }: { course: Course }) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Course</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to delete this course? This action cannot be undone and will delete all
-                    folders and documents.
+                    Are you sure you want to delete this course? This action
+                    cannot be undone and will delete all folders and documents.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="flex gap-3">
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    className="bg-destructive text-white hover:bg-destructive/90"
                   >
                     Delete
                   </AlertDialogAction>
@@ -155,5 +174,5 @@ export default function CourseSettings({ course }: { course: Course }) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

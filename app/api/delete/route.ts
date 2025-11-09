@@ -1,29 +1,40 @@
-import { del } from "@vercel/blob"
-import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { del } from "@vercel/blob";
+import { type NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function DELETE(request: NextRequest) {
+  const supabase = await createClient();
+
   try {
-    const supabase = await createClient()
     const {
       data: { user },
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { documentId, blobUrl } = await request.json()
+    const { documentId, blobUrl } = await request.json();
 
     if (!documentId || !blobUrl) {
-      return NextResponse.json({ error: "Missing documentId or blobUrl" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Missing documentId or blobUrl" },
+        { status: 400 }
+      );
     }
 
     // Verify document belongs to user's course
-    const { data: document } = await supabase.from("documents").select("course_id").eq("id", documentId).single()
+    const { data: document } = await supabase
+      .from("documents")
+      .select("course_id")
+      .eq("id", documentId)
+      .single();
 
     if (!document) {
-      return NextResponse.json({ error: "Document not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Document not found" },
+        { status: 404 }
+      );
     }
 
     const { data: course } = await supabase
@@ -31,23 +42,26 @@ export async function DELETE(request: NextRequest) {
       .select("id")
       .eq("id", document.course_id)
       .eq("user_id", user.id)
-      .single()
+      .single();
 
     if (!course) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     // Delete from database
-    const { error: deleteError } = await supabase.from("documents").delete().eq("id", documentId)
+    const { error: deleteError } = await supabase
+      .from("documents")
+      .delete()
+      .eq("id", documentId);
 
-    if (deleteError) throw deleteError
+    if (deleteError) throw deleteError;
 
     // Delete from Vercel Blob
-    await del(blobUrl)
+    await del(blobUrl);
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Delete error:", error)
-    return NextResponse.json({ error: "Delete failed" }, { status: 500 })
+    console.error("Delete error:", error);
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }
