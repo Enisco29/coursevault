@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { BookOpen } from "lucide-react"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { BookOpen } from "lucide-react";
 
 export default function Home() {
   return (
@@ -8,12 +8,12 @@ export default function Home() {
       <header className="border-b border-border bg-background">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-primary-foreground" />
+            <div className="w-7 h-7 rounded bg-primary flex items-center justify-center">
+              <BookOpen className="w-3 h-3 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">CourseVault</h1>
+            <h1 className="text-lg font-bold">CourseVault</h1>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <Link href="/auth/login">
               <Button variant="ghost">Login</Button>
             </Link>
@@ -28,8 +28,9 @@ export default function Home() {
         <div className="space-y-4">
           <h2 className="text-5xl font-bold">Organize Your Course Materials</h2>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            CourseVault is your secure PDF organizer for courses. Create courses, organize files into folders, and
-            easily access all your study materials in one place.
+            CourseVault is your secure PDF organizer for courses. Create
+            courses, organize files into folders, and easily access all your
+            study materials in one place.
           </p>
         </div>
 
@@ -39,7 +40,9 @@ export default function Home() {
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
             <h3 className="font-semibold">Organize Courses</h3>
-            <p className="text-sm text-muted-foreground">Create courses and organize your study materials</p>
+            <p className="text-sm text-muted-foreground">
+              Create courses and organize your study materials
+            </p>
           </div>
 
           <div className="flex flex-col items-center gap-3 p-6 rounded-lg border border-border">
@@ -47,7 +50,9 @@ export default function Home() {
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
             <h3 className="font-semibold">Nested Folders</h3>
-            <p className="text-sm text-muted-foreground">Create hierarchical folder structures</p>
+            <p className="text-sm text-muted-foreground">
+              Create hierarchical folder structures
+            </p>
           </div>
 
           <div className="flex flex-col items-center gap-3 p-6 rounded-lg border border-border">
@@ -55,7 +60,9 @@ export default function Home() {
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
             <h3 className="font-semibold">View PDFs</h3>
-            <p className="text-sm text-muted-foreground">View and manage all your PDFs in one place</p>
+            <p className="text-sm text-muted-foreground">
+              View and manage all your PDFs in one place
+            </p>
           </div>
         </div>
 
@@ -66,5 +73,5 @@ export default function Home() {
         </Link>
       </div>
     </main>
-  )
+  );
 }
