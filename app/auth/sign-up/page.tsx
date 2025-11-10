@@ -49,46 +49,25 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      const redirectUrl = process.env.NEXT_PUBLIC_BASE_URL
-        ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`
-        : `${window.location.origin}/auth/callback`;
-
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: { full_name: fullName },
-          emailRedirectTo: redirectUrl,
         },
       });
       if (error) throw error;
-      setSuccess(true);
-      setTimeout(() => router.push("/auth/login"), 2000);
+      if (data.session) {
+        router.push("/dashboard");
+      } else {
+        setSuccess(true);
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
   };
-
-  if (success) {
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-background">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>Check your email</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              We&apos;ve sent a confirmation link to {email}. Please confirm
-              your email to complete signup.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-background">
       <div className="w-full max-w-sm">
